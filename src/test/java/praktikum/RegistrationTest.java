@@ -6,22 +6,12 @@ import io.restassured.response.Response;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeDriverService;
-import org.openqa.selenium.chrome.ChromeOptions;
 import praktikum.pageobject.RegistrationPage;
-
-import java.io.File;
 
 import static org.junit.Assert.assertTrue;
 
-@RunWith(Parameterized.class)
 public class RegistrationTest {
-
-    private final String browser;
 
     private WebDriver driver;
     private RegistrationPage registrationPage;
@@ -33,41 +23,12 @@ public class RegistrationTest {
 
     private boolean registeredUser;
 
-    public RegistrationTest(String browser) {
-        this.browser = browser;
-    }
-
-    @Parameterized.Parameters(name = "{0}")
-    public static Object[][] getBrowser() {
-        return new Object[][]{
-                {"Chrome"},
-                {"Yandex"}
-        };
-    }
-
     @Before
     public void setUp() {
         RestAssured.baseURI =
                 "https://stellarburgers.education-services.ru";
 
-        if ("Chrome".equals(browser)) {
-            driver = new ChromeDriver();
-        } else {
-            ChromeOptions options = new ChromeOptions();
-
-            options.setBinary(
-                    "C:\\Program Files\\Yandex\\YandexBrowser\\Application\\browser.exe"
-            );
-
-            ChromeDriverService service =
-                    new ChromeDriverService.Builder()
-                            .usingDriverExecutable(
-                                    new File("C:\\WebDriver\\chromedriver.exe")
-                            )
-                            .build();
-
-            driver = new ChromeDriver(service, options);
-        }
+        driver = praktikum.BrowserFactory.createDriver();
 
         driver.manage().window().maximize();
 
